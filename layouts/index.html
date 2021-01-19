@@ -39,6 +39,7 @@
         {{- end -}}
     </div>
 
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     {{- $comment := .Site.Params.Comment -}}
     {{- $remark42 := $comment.remark42 | default dict -}}
     {{- if $remark42.enable -}}
