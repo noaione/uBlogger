@@ -509,3 +509,12 @@ rss:
   Newtab: true
   Icon:
     Class: fas fa-rss fa-fw
+
+# 065: Trakteer
+trakteer:
+  Weight: 60
+  Prefix: https://trakteer.id/
+  title: Trakteer
+  Newtab: true
+  Icon:
+    Src: svg/icons/trakteer.svg
