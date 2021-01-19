@@ -1,3 +1,23 @@
 // ==============================
 // Custom style
 // ==============================
+
+.header-logo,
+.home-title,
+.home-subtitle,
+.menu,
+.footer,
+.breadcrumbs,
+.toc,
+.tag-cloud-tags {
+    font-family: 'Cousine', monospace;
+    font-size: 95%;
+}
+
+.single-title,
+.categories-card,
+.group-title-year, .group-title-month, .archive-item, .archive-item-date,
+.post-tag-summary,
+.summary-post-meta {
+    font-family: 'Cousine', monospace;
+}

@@ -5,15 +5,15 @@
     {{- with .Site.Params.app.svgFavicon -}}
         <link rel="icon" href="{{ . }}" type="image/x-icon">
     {{- else -}}
-        <link rel="shortcut icon" type="image/x-icon" href="/blog/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/blog/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/blog/favicon-16x16.png">
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     {{- end -}}
-    <link rel="apple-touch-icon" sizes="180x180" href="/blog/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     {{- with .Site.Params.app.iconColor -}}
-        <link rel="mask-icon" href="/blog/safari-pinned-tab.svg" color="{{ . }}">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="{{ . }}">
     {{- end -}}
-    <link rel="manifest" href="/blog/site.webmanifest">
+    <link rel="manifest" href="/site.webmanifest">
 {{- end -}}
 
 <link rel="canonical" href="{{ .Permalink }}" />
@@ -57,3 +57,5 @@
 {{- $style := dict "Source" $source "Fingerprint" $fingerprint -}}
 {{- partial "plugin/style.html" $style -}}
 
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
