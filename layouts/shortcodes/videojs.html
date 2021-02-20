@@ -1,0 +1,23 @@
+{{- if .IsNamedParams -}}
+{{- if .Get "url" -}}
+{{- $url := .Get "url" -}}
+<div align="center">
+    <video class="video-js vjs-fluid" controls preload="no" width="auto" height="auto" data-setup="{fluid: true}">
+        <source src="{{ $url }}" type="video/mp4" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank"
+            >supports HTML5 video</a
+            >
+        </p>
+    </video>
+    {{- if .Get "caption" -}}
+    {{- $caption := .Get "caption" -}}
+    <figcaption class="image-caption">
+        {{- $caption | safeHTML -}}
+    </figcaption>
+    {{- end -}}
+</div>
+{{- end -}}
+{{- end -}}
