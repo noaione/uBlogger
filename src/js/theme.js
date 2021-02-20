@@ -443,6 +443,9 @@ class Theme {
                     $toc.style.top = `${TOP_SPACING}px`;
                 }
 
+                let $subtitleLinkElem = document.getElementsByClassName('single-subtitle headerLink');
+                let tocSubtract = $subtitleLinkElem.length > 0 ? 2 : 1;
+
                 this.util.forEach($tocLinkElements, $tocLink => { $tocLink.classList.remove('active'); });
                 this.util.forEach($tocLiElements, $tocLi => { $tocLi.classList.remove('has-active'); });
                 const INDEX_SPACING = 20 + (headerIsFixed ? headerHeight : 0);
@@ -456,7 +459,7 @@ class Theme {
                     }
                 }
                 if (activeTocIndex !== -1) {
-                    let $selectedToC = $tocLinkElements[activeTocIndex];
+                    let $selectedToC = $tocLinkElements[activeTocIndex - tocSubtract];
                     if (typeof $selectedToC !== "undefined") {
                         $selectedToC.classList.add('active');
                         let $parent = $selectedToC.parentElement;
