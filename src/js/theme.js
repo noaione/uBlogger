@@ -400,7 +400,6 @@ class Theme {
 
     initToc() {
         const $tocCore = document.getElementById('TableOfContents');
-        console.info($tocCore);
         if ($tocCore === null) return;
         if (document.getElementById('toc-static').getAttribute('data-kept') || this.util.isTocStatic()) {
             const $tocContentStatic = document.getElementById('toc-content-static');
@@ -457,12 +456,14 @@ class Theme {
                     }
                 }
                 if (activeTocIndex !== -1) {
-                    console.info($tocLinkElements, activeTocIndex);
-                    $tocLinkElements[activeTocIndex].classList.add('active');
-                    let $parent = $tocLinkElements[activeTocIndex].parentElement;
-                    while ($parent !== $tocCore) {
-                        $parent.classList.add('has-active');
-                        $parent = $parent.parentElement.parentElement;
+                    let $selectedToC = $tocLinkElements[activeTocIndex];
+                    if (typeof $selectedToC !== "undefined") {
+                        $selectedToC.classList.add('active');
+                        let $parent = $selectedToC.parentElement;
+                        while ($parent !== $tocCore) {
+                            $parent.classList.add('has-active');
+                            $parent = $parent.parentElement.parentElement;
+                        }
                     }
                 }
             });
