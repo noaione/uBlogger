@@ -400,6 +400,7 @@ class Theme {
 
     initToc() {
         const $tocCore = document.getElementById('TableOfContents');
+        console.info($tocCore);
         if ($tocCore === null) return;
         if (document.getElementById('toc-static').getAttribute('data-kept') || this.util.isTocStatic()) {
             const $tocContentStatic = document.getElementById('toc-content-static');
@@ -456,6 +457,7 @@ class Theme {
                     }
                 }
                 if (activeTocIndex !== -1) {
+                    console.info($tocLinkElements, activeTocIndex);
                     $tocLinkElements[activeTocIndex].classList.add('active');
                     let $parent = $tocLinkElements[activeTocIndex].parentElement;
                     while ($parent !== $tocCore) {
