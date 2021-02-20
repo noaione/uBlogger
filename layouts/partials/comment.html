@@ -1,9 +1,10 @@
 {{- $cdn := .Scratch.Get "cdn" | default dict -}}
 {{- $fingerprint := .Scratch.Get "fingerprint" -}}
 {{- $comment := .Site.Params.Comment | default dict -}}
+{{- $disableComment := $.Params.disableComment | default false -}}
 {{- $commentConfig := dict -}}
 
-{{- if $comment.enable -}}
+{{- if and ($comment.enable) (not $disableComment) -}}
     <div id="comments">
         {{- /* Disqus Comment System */ -}}
         {{- $disqus := $comment.disqus | default dict -}}
