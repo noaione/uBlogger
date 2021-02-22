@@ -22,3 +22,27 @@
 .summary-post-meta {
     font-family: 'Cousine', monospace;
 }
+
+// ================================
+// Override gist markdown embed color
+// ================================
+
+.gist .gist-data {
+    background-color: #ECECF0 !important;
+}
+
+.gist {
+    color: #000;
+}
+
+[theme=dark] {
+    .gist .gist-data {
+        background-color: #272C34 !important;
+    }
+    .gist {
+        color: #ddd;
+    }
+    .gist .gist-meta {
+        color: #d8d8d8;
+    }
+}
