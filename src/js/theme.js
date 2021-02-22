@@ -448,12 +448,11 @@ class Theme {
 
                 // Check if there's gist embed
                 let $embeddedGists = []
-                for (let i = 0; i < $headerLinkElements.length; i++) {
-                    const $headerSelGist = $headerLinkElements[i];
-                    if ($headerSelGist.parentNode.nodeName === "ARTICLE") {
-                        $embeddedGists.push($headerSelGist);
+                this.util.forEach($headerLinkElements, $headerElem => {
+                    if ($headerElem.parentNode.nodeName === "ARTICLE") {
+                        $embeddedGists.push($headerElem);
                     }
-                }
+                })
                 tocSubtract += $embeddedGists.length;
 
                 this.util.forEach($tocLinkElements, $tocLink => { $tocLink.classList.remove('active'); });
