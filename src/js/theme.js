@@ -446,6 +446,16 @@ class Theme {
                 let $subtitleLinkElem = document.getElementsByClassName('single-subtitle headerLink');
                 let tocSubtract = $subtitleLinkElem.length > 0 ? 2 : 1;
 
+                // Check if there's gist embed
+                let $embeddedGists = []
+                for (let i = 0; i < $headerLinkElements.length; i++) {
+                    const $headerSelGist = $headerLinkElements[i];
+                    if ($headerSelGist.parentNode.nodeName === "ARTICLE") {
+                        $embeddedGists.push($headerSelGist);
+                    }
+                }
+                tocSubtract += $embeddedGists.length;
+
                 this.util.forEach($tocLinkElements, $tocLink => { $tocLink.classList.remove('active'); });
                 this.util.forEach($tocLiElements, $tocLi => { $tocLi.classList.remove('has-active'); });
                 const INDEX_SPACING = 20 + (headerIsFixed ? headerHeight : 0);
