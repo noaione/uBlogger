@@ -1,0 +1,7 @@
+{{- if .IsNamedParams -}}
+{{- if and (.Get "username") (.Get "repo") -}}
+{{- $uname := .Get "username" -}}
+{{- $repo := .Get "repo" -}}
+<div class="repo-card" data-repo="{{ $uname }}/{{ $repo }}"></div>
+{{- end -}}
+{{- end -}}

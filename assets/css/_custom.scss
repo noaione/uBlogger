@@ -46,3 +46,12 @@
         color: #d8d8d8;
     }
 }
+
+.repo-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
