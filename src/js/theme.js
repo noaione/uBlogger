@@ -857,10 +857,8 @@ const loadGitHubCodeEmbed = async () => {
             let codeTextSplit = codeText.split("\n");
             let endLineText = "";
             if (endLine === -1) {
-                console.info("a");
                 endLine = codeTextSplit.length;
             } else {
-                console.info("b");
                 endLineText = `-L${endLine}`;
             }
             if (startLine === endLine) {
@@ -869,7 +867,6 @@ const loadGitHubCodeEmbed = async () => {
             // If the start line is bigger than the total file line, only print out the last line
             if (startLine > codeTextSplit.length) {
                 startLine = endLine = codeTextSplit.length;
-                console.info("c");
                 endLineText = "";
             }
             fileUrl += `#L${startLine}${endLineText}`;
@@ -921,7 +918,6 @@ const loadGitHubCodeEmbed = async () => {
         let lineEnd = el.getAttribute("data-line-end");
         lineStart = isNaN(parseInt(lineStart)) ? -1 : parseInt(lineStart);
         lineEnd = isNaN(parseInt(lineEnd)) ? -1 : parseInt(lineEnd);
-        console.info(el);
 
         if (isNullUndef(userName) || isNullUndef(repoName) || isNullUndef(path)) {
             // Remove and dont render
