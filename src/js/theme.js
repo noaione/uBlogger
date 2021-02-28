@@ -746,6 +746,84 @@ class Theme {
             this.onClickMask();
         }, 100);
     }
+};
+
+const loadRepoDOM = async () => {
+    async function get(url) {
+        const resp = await fetch(url);
+        if (resp.status !== 200) {
+            throw new Error(`Got response ${resp.status} from the API while fetching ${url}`);
+        }
+        return resp.json();
+    }
+
+    // const emojis = await get('https://api.github.com/emojis');
+    const colors = await get('https://raw.githubusercontent.com/ozh/github-colors/master/colors.json');
+    colors["Unknown"] = {
+        "color": "#565656",
+        "url": "https://github.com/"
+    }
+
+    document.querySelectorAll('.repo-card').forEach(async function(el) {
+        const name = el.getAttribute('data-repo');
+
+        let data;
+        try {
+            data = await get(`https://api.github.com/repos/${name}`);
+        } catch (e) {
+            console.error(`Failed to load repository info, using fallback...`, e.traceback);
+            const [username, reponame] = name.split("/");
+            data = {
+                html_url: `https://github.com/${name}`,
+                description: "Failed to load repository info...",
+                name: reponame,
+                owner: {
+                    login: username,
+                },
+                stargazers_count: 0,
+                forks: 0,
+                language: "Unknown"
+            }
+        }
+
+        // data.description = (data.description || '').replace(/:\w+:/g, function(match) {
+        //     const name = match.substring(1, match.length - 1);
+        //     const emoji = emojis[name];
+
+        //     if (emoji) {
+        //         return `<span><img src="${emoji}" style="width: 1rem; height: 1rem; vertical-align: -0.2rem;"></span>`;
+        //     }
+
+        //     return match;
+        // });
+
+        el.innerHTML = `
+            <div class="repo-main">
+                <div style="display: flex; align-items: center;">
+                    <svg style="fill: #606a75;margin-right: 8px;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    <span style="font-weight: 600; color: #0366d6;">
+                        <a class="repo-link" href="${data.html_url}">${data.owner.login}/${data.name}</a>
+                    </span>
+                </div>
+                <div class="repo-desc-forked" style="display: ${data.fork ? 'block' : 'none'}">Forked from <a class="repo-link" href="${data.fork ? data.source.html_url : ''}">${data.fork ? data.source.full_name : ''}</a></div>
+                <div class="repo-desc">${data.description}</div>
+                <div class="repo-footer">
+                    <div style="${data.language ? '' : 'display: none'}; margin-right: 16px;">
+                        <span style="width: 12px; height: 12px; border-radius: 100%; background-color: ${data.language ? colors[data.language].color : ''}; display: inline-block; top: 1px; position: relative;"></span>
+                        <span>${data.language}</span>
+                    </div>
+                    <div style="display: ${data.stargazers_count == 0 ? 'none' : 'flex'}; align-items: center; margin-right: 16px;">
+                        <svg style="fill: #FBCA04;" aria-label="stars" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"><title>Stargazers</title></path></svg>
+                        &nbsp; <span>${data.stargazers_count}</span>
+                    </div>
+                    <div style="display: ${data.forks == 0 ? 'none' : 'flex'}; align-items: center;">
+                        <svg style="fill: #586069;" aria-label="fork" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"><title>Forks</title></path></svg>
+                        &nbsp; <span>${data.forks}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
 }
 
 const themeInit = () => {
@@ -757,4 +835,5 @@ if (document.readyState !== 'loading') {
     themeInit();
 } else {
     document.addEventListener('DOMContentLoaded', themeInit, false);
+    document.addEventListener('DOMContentLoaded', loadRepoDOM);
 }

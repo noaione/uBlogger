@@ -47,11 +47,16 @@
     }
 }
 
-.repo-link {
-    color: inherit;
-    text-decoration: none;
+[theme=dark] {
+    .repo-desc,
+    .repo-desc-forked,
+    .repo-footer,
+    .repo-main {
+        color: rgb(190, 190, 190) !important;
+    }
 
-    &:hover {
-        text-decoration: underline;
+    .repo-main {
+        background-color: #24292e;
+        border-color: #313131 !important;
     }
 }
