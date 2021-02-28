@@ -175,6 +175,10 @@
     {{- $config = $cookieconsentConfig | dict "cookieconsent" | merge $config -}}
 {{- end -}}
 
+{{- /* HighlightJS */ -}}
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js"></script>
+
 {{- range $params.library.css -}}
     {{- dict "Source" . "Fingerprint" $fingerprint | dict "Scratch" $.Scratch "Data" | partial "scratch/style.html" -}}
 {{- end -}}

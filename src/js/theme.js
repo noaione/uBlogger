@@ -748,6 +748,7 @@ class Theme {
     }
 };
 
+// A modified version of: https://github.com/Tarptaeya/repo-card
 const loadRepoDOM = async () => {
     async function get(url) {
         const resp = await fetch(url);
@@ -826,6 +827,131 @@ const loadRepoDOM = async () => {
     });
 }
 
+// Code based on emgithub.com
+const loadGitHubCodeEmbed = async () => {
+    async function getCode(user, repo, branch, path) {
+        const rawFile = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`;
+        const resp = await fetch(rawFile);
+        return [resp.ok, resp.ok ? await resp.text() : `${resp.status} - ${resp.statusText}`];
+    }
+    function isNullUndef(data) {
+        if (typeof data === "undefined" || data === null) {
+            return true;
+        }
+        return false;
+    }
+    const isDark = document.getElementsByTagName("body")[0].getAttribute("theme") === "dark";
+
+    function generateEmbed(targetContainer, codeText, fileName, fileUrl, rawFileUrl, lang, startLine, endLine, tabSize = 4) {
+        const fileContainer = document.createElement("div");
+        fileContainer.style.margin = "1em 0";
+      
+        const code = document.createElement("code");
+        code.style.padding = "1em";
+        code.style.display = "flex";
+
+        code.style.borderRadius = "0.3rem 0.3rem 0 0";
+        code.style.border = "1px solid #555";
+        code.classList.add(lang);
+        if (startLine > 0) {
+            let codeTextSplit = codeText.split("\n");
+            let endLineText = "";
+            if (endLine === -1) {
+                console.info("a");
+                endLine = codeTextSplit.length;
+            } else {
+                console.info("b");
+                endLineText = `-L${endLine}`;
+            }
+            if (startLine === endLine) {
+                endLineText = "";
+            }
+            // If the start line is bigger than the total file line, only print out the last line
+            if (startLine > codeTextSplit.length) {
+                startLine = endLine = codeTextSplit.length;
+                console.info("c");
+                endLineText = "";
+            }
+            fileUrl += `#L${startLine}${endLineText}`;
+            code.textContent = codeTextSplit.slice(startLine - 1, endLine).join("\n");
+        } else {
+            code.textContent = codeText;
+        }
+        if (typeof hljs != "undefined" && typeof hljs.highlightBlock != "undefined") {
+            hljs.highlightBlock(code);
+        }
+        if (typeof hljs != "undefined" && typeof hljs.lineNumbersBlock != "undefined") {
+            hljs.lineNumbersBlock(code, {
+                singleLine: true,
+                startFrom: startLine > 0 ? Number.parseInt(startLine) : 1
+            });
+        }
+
+        // Not use a real `pre` to avoid style being overwritten
+        // Simulate a real one by using its default style
+        const customPre = document.createElement("div");
+        customPre.style.whiteSpace = "pre";
+        customPre.style.tabSize = tabSize;
+        customPre.style.wordBreak = "break-word";
+        customPre.style.wordWrap = "break-word";
+        customPre.appendChild(code);
+        fileContainer.appendChild(customPre);
+
+        const meta = document.createElement("div");
+        meta.innerHTML = `<a target="_blank" href="${rawFileUrl}" style="float: right;">view raw</a>
+        <a target="_blank" href="${fileUrl}">${fileName}</a>
+        hosted <span class="hide-in-phone">with ❤ </span>by <a target="_blank" href="https://github.com">GitHub</a>`;
+        meta.classList.add("file-meta");
+        meta.style.borderTop = "0";
+        meta.classList.add("file-meta-dark");
+        meta.style.border = "1px solid #555";
+        fileContainer.appendChild(meta);
+        targetContainer.innerHTML = "";
+        targetContainer.appendChild(fileContainer);
+    }
+
+    document.querySelectorAll('.gh-code-embed').forEach(async (el) => {
+        const userName = el.getAttribute("data-user");
+        const repoName = el.getAttribute("data-repo");
+        const branch = el.getAttribute("data-branch") || "master";
+        const path = el.getAttribute("data-filepath");
+        let tabSize = el.getAttribute("data-tabsize") || 4;
+        tabSize = isNaN(parseInt(tabSize)) ? 4 : parseInt(tabSize);
+        let lineStart = el.getAttribute("data-line-start");
+        let lineEnd = el.getAttribute("data-line-end");
+        lineStart = isNaN(parseInt(lineStart)) ? -1 : parseInt(lineStart);
+        lineEnd = isNaN(parseInt(lineEnd)) ? -1 : parseInt(lineEnd);
+        console.info(el);
+
+        if (isNullUndef(userName) || isNullUndef(repoName) || isNullUndef(path)) {
+            // Remove and dont render
+            el.remove();
+            return;
+        }
+        const splitPath = path.split("/");
+
+        if (lineStart !== -1) {
+            if (lineStart > lineEnd && lineEnd !== -1) {
+                // Make sure end line is not bigger than start line, if it's set the end same as the start.
+                lineEnd = lineStart;
+            }
+        } else if (lineEnd !== -1 && lineStart === -1) {
+            lineStart = 1;
+        }
+
+        const fileName = splitPath[splitPath.length - 1];
+        let fileExt = fileName.split(".")[fileName.split(".").length - 1];
+
+        const [isOk, codeContents] = await getCode(userName, repoName, branch, path);
+
+        const fileUrl = `https://github.com/${userName}/${repoName}/blob/${branch}/${path}`;
+        const rawFile = `https://raw.githubusercontent.com/${userName}/${repoName}/${branch}/${path}`;
+
+        fileExt = isOk ? fileExt : "plaintext";
+        generateEmbed(el, codeContents, fileName, fileUrl, rawFile, fileExt, lineStart, lineEnd, tabSize);
+    });
+}
+
 const themeInit = () => {
     const theme = new Theme();
     theme.init();
@@ -836,4 +962,5 @@ if (document.readyState !== 'loading') {
 } else {
     document.addEventListener('DOMContentLoaded', themeInit, false);
     document.addEventListener('DOMContentLoaded', loadRepoDOM);
+    document.addEventListener('DOMContentLoaded', loadGitHubCodeEmbed);
 }

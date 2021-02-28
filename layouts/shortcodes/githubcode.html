@@ -1,0 +1,21 @@
+{{- if .IsNamedParams -}}
+    {{- if and (.Get "user") (.Get "repo") (.Get "filepath") -}}
+        {{- $userName := .Get "user" -}}
+        {{- $repoName := .Get "repo" -}}
+        {{- $branchName := .Get "branch" | default "master" -}}
+        {{- $filePath := .Get "filepath" -}}
+        {{- $tabSize := .Get "tabsize" | default "4" -}}
+        {{- $lineS := .Get "lineStart" | default "-1" -}}
+        {{- $lineE := .Get "lineEnd" | default "-1" -}}
+        <div class="gh-code-embed" data-user="{{ $userName }}" data-repo="{{ $repoName }}"
+            data-branch="{{ $branchName }}" data-filepath="{{ $filePath }}"
+            data-tabsize="{{ $tabSize }}" data-line-start="{{ $lineS }}" data-line-end="{{ $lineE }}">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    {{- end -}}
+{{- end -}}
