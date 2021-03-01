@@ -847,7 +847,7 @@ const loadGitHubCodeEmbed = async () => {
     }
     const isDark = document.getElementsByTagName("body")[0].getAttribute("theme") === "dark";
 
-    function generateEmbed(targetContainer, codeText, fileName, fileUrl, rawFileUrl, lang, startLine, endLine, tabSize = 4) {
+    function generateEmbed(targetContainer, codeText, fileName, fileUrl, rawFileUrl, lang, branchName, startLine, endLine, tabSize = 4) {
         const fileContainer = document.createElement("div");
         fileContainer.style.margin = "1em 0";
       
@@ -899,6 +899,15 @@ const loadGitHubCodeEmbed = async () => {
         customPre.appendChild(code);
         fileContainer.appendChild(customPre);
 
+        if (["master", "main"].indexOf(branchName.toLowerCase()) === -1) {
+            let branchExt = `@${branchName}`;
+            // https://docs.github.com/en/github/getting-started-with-github/github-glossary#commit-id
+            if (branchName.length === 40) {
+                branchExt = branchExt.slice(0, 8);
+            }
+            fileName += branchExt;
+        }
+
         const meta = document.createElement("div");
         meta.innerHTML = `<a target="_blank" href="${rawFileUrl}" style="float: right;">view raw</a>
         <a target="_blank" href="${fileUrl}">${fileName}</a>
@@ -949,7 +958,7 @@ const loadGitHubCodeEmbed = async () => {
         const rawFile = `https://raw.githubusercontent.com/${userName}/${repoName}/${branch}/${path}`;
 
         fileExt = isOk ? fileExt : "plaintext";
-        generateEmbed(el, codeContents, fileName, fileUrl, rawFile, fileExt, lineStart, lineEnd, tabSize);
+        generateEmbed(el, codeContents, fileName, fileUrl, rawFile, fileExt, branch, lineStart, lineEnd, tabSize);
     });
 }
 
