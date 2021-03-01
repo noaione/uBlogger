@@ -400,7 +400,12 @@ class Theme {
 
     initToc() {
         const $tocCore = document.getElementById('TableOfContents');
-        if ($tocCore === null) return;
+        if ($tocCore === null || typeof $tocCore === "undefined") return;
+        if ($tocCore.children.length === 0) {
+            const $tocTitles = document.getElementsByClassName('toc-title');
+            this.util.forEach($tocTitles, $tocTitle => {$tocTitle.parentNode.remove()});
+            return;
+        }
         if (document.getElementById('toc-static').getAttribute('data-kept') || this.util.isTocStatic()) {
             const $tocContentStatic = document.getElementById('toc-content-static');
             if ($tocCore.parentElement !== $tocContentStatic) {
