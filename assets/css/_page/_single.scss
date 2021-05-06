@@ -1,4 +1,5 @@
 @import "../_partial/_single/toc";
+@import "../_partial/_single/repo";
 
 .single {
   .single-title {
@@ -96,7 +97,7 @@
   }
 
   p {
-    margin: .5rem 0;
+    margin: $margin-article;
   }
 
   b, strong {
@@ -191,6 +192,7 @@
   img {
     max-width: 100%;
     min-height: 1em;
+    content-visibility: auto;
   }
 
   .lazyloading {
@@ -229,7 +231,6 @@
   @import "../_partial/_single/mapbox";
   @import "../_partial/_single/music";
   @import "../_partial/_single/bilibili";
-  @import "../_partial/_single/repo";
 
   hr {
     margin: 1rem 0;
@@ -263,19 +264,29 @@
     }
   }
 
-  .typeit {
-    .code {
-      padding: .375rem;
-      font-size: .875rem;
-      font-family: $code-font-family;
-      font-weight: bold;
-      word-break: break-all;
-    }
-  }
-
   .version {
     height: 1.25em;
     vertical-align: text-bottom;
+  }
+
+  blockquote {
+    blockquote {
+      padding: 0;
+      width: 100%;
+      line-height: 3.5rem;
+
+      blockquote {
+        width: 100%;
+        padding: 0;
+        line-height: 6rem;
+
+        blockquote {
+          width: 100%;
+          padding: 0;
+          line-height: 8rem;
+        }
+      }
+    }
   }
 }
 

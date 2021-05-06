@@ -13,7 +13,7 @@
                     {{- $url = .RelPermalink -}}
                 {{- end -}}
                 <a href="{{ $url }}"{{ with .Title | default .Name }} title="{{ . }}"{{ end }}{{ if (urls.Parse $url).Host }} rel="noopener noreffer" target="_blank"{{ end }}>
-                    {{- dict "Src" $avatar | partial "plugin/image.html" -}}
+                    {{- dict "Src" $avatar "Alt" $profile.alt | partial "plugin/image.html" -}}
                 </a>
             {{- else -}}
                 {{- dict "Src" $avatar | partial "plugin/image.html" -}}
@@ -31,13 +31,7 @@
 
         {{- with $profile.subtitle -}}
             <div class="home-subtitle">
-                {{- if $profile.typeit -}}
-                    {{- $id := dict "Content" . "Scratch" $.Scratch | partial "function/id.html" -}}
-                    <div id="{{ $id }}" class="typeit"></div>
-                    {{- dict $id (slice $id) | dict "typeitMap" | merge ($.Scratch.Get "this") | $.Scratch.Set "this" -}}
-                {{- else -}}
-                    {{- . | safeHTML -}}
-                {{- end -}}
+                {{- . | safeHTML -}}
             </div>
         {{- end -}}
 
